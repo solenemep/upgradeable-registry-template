@@ -1,34 +1,28 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.10;
 
-// Uncomment this line to use console.log
-// import "hardhat/console.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-contract Lock {
-    uint public unlockTime;
-    address payable public owner;
+import "./Registry.sol";
 
-    event Withdrawal(uint amount, uint when);
+contract Lock is OwnableUpgradeable {
+    address public treasury;
 
-    constructor(uint _unlockTime) payable {
-        require(
-            block.timestamp < _unlockTime,
-            "Unlock time should be in the future"
-        );
+    mapping(address => uint256) internal _lockedAmounts;
 
-        unlockTime = _unlockTime;
-        owner = payable(msg.sender);
+    function __Lock_init() external initializer {
+        __Ownable_init();
     }
 
-    function withdraw() public {
-        // Uncomment this line, and the import of "hardhat/console.sol", to print a log in your terminal
-        // console.log("Unlock time is %o and block timestamp is %o", unlockTime, block.timestamp);
+    function setDependencies(address registryAddress) external onlyOwner {
+        // treasury = Registry(registryAddress).getContract("TREASURY");
+    }
 
-        require(block.timestamp >= unlockTime, "You can't withdraw yet");
-        require(msg.sender == owner, "You aren't the owner");
+    function lock(uint256 amount) external {
+        _lockedAmounts[msg.sender] += amount;
+    }
 
-        emit Withdrawal(address(this).balance, block.timestamp);
-
-        owner.transfer(address(this).balance);
+    function add(uint256 a) external pure returns (uint256) {
+        return a + 10;
     }
 }
