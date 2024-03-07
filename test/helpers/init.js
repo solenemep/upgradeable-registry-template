@@ -39,7 +39,6 @@ async function deployContracts() {
 async function deployImplementations() {
   // Lock
   lock = await upgrades.deployImplementation(Lock);
-  console.log('Lock impl address:', lock.address);
   await wait(30_000);
 }
 
@@ -56,7 +55,6 @@ async function addProxies() {
 async function deployProxies() {
   // Lock
   lock = await Lock.attach(await registry.getContract('LOCK'));
-  console.log('Lock address:', lock.address);
   await wait(30_000);
 }
 

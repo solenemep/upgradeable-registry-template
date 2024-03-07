@@ -23,6 +23,6 @@ contract Lock2 is OwnableUpgradeable {
     }
 
     function add(uint256 a) external pure returns (uint256) {
-        return a + 10;
+        return a + 20;
     }
 }
